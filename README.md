@@ -1,8 +1,8 @@
-# 📡 ft_ping
+# ft_ping 🛰️ — ICMP network diagnostic tool
 
 Premier projet post tronc commun de l’école 42.
 
-ft_ping est une implémentation en C du programme ping, permettant de tester la connectivité réseau entre une machine locale et une cible distante à l’aide du protocole ICMP (Internet Control Message Protocol).
+ft_ping est une implémentation en C de la commande ping, permettant de tester la connectivité réseau entre une machine locale et une cible distante à l’aide du protocole ICMP (Internet Control Message Protocol).
 
 # 🎯 Objectifs du projet
 
@@ -26,6 +26,20 @@ make
 - sudo ./ft_ping -v google.com
 
  ℹ️ Les raw sockets nécessitent les droits root.
+
+ # ✨ Fonctionnalités
+
+- Envoi de requêtes ICMP Echo Request
+- Réception et analyse des Echo Reply
+- Calcul du RTT (Round Trip Time)
+- Gestion des pertes de paquets
+- Affichage type ping standard (min/avg/max/mdev)
+- Support des options :
+  - `-v` mode verbose
+
+# ➡️ Schema 
+
+<img width="1593" height="2026" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/5a28b95e-0b7d-49b3-ac95-baf23c7beb12" />
 
 # 📁 Arborescence du projet
 ```
