@@ -12,6 +12,7 @@
 
 #include "ping.h"
 
+// Configure le timeout de reception sur la socket.
 void	set_socket_timeout(int sockfd, int seconds)
 {
 	struct timeval timeout;
@@ -26,6 +27,7 @@ void	set_socket_timeout(int sockfd, int seconds)
 	}
 }
 
+// Affiche le bilan final avec les pertes et les statistiques RTT.
 void	print_stat(t_ping *ping)
 {
 	int		lost;

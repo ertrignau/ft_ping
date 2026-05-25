@@ -12,6 +12,7 @@
 
 #include "ping.h"
 
+// Ouvre la socket brute ICMP et applique les options de timeout et de TTL.
 void create_socket(t_ping *ping)
 {
 	if (!ping)
@@ -30,6 +31,7 @@ void create_socket(t_ping *ping)
 	}
 }
 
+// Resout le nom d'hote cible et remplit l'adresse de destination.
 void resolve_hosts(t_ping *ping, char *host)
 {
 	struct addrinfo hints;
@@ -51,6 +53,7 @@ void resolve_hosts(t_ping *ping, char *host)
 	freeaddrinfo(res);
 }
 
+// Construit et envoie une requete ICMP Echo vers la cible resolue.
 void send_ping(t_ping *ping)
 {
 	t_icmp_packet	packet;

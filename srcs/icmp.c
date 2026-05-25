@@ -12,6 +12,7 @@
 
 #include "ping.h"
 
+// Calcule le checksum ICMP pour un bloc de donnees brut.
 uint16_t icmp_checksum(void *data, int len)
 {
 	uint16_t	*buf;
@@ -33,6 +34,7 @@ uint16_t icmp_checksum(void *data, int len)
 	return ((uint16_t)(~sum));
 }
 
+// Recoit un paquet sur la socket non bloquante et gere les erreurs temporaires.
 ssize_t recv_packet(t_ping *ping, uint8_t *buffer, size_t size)
 {
 	struct sockaddr_in	addr;
@@ -50,6 +52,7 @@ ssize_t recv_packet(t_ping *ping, uint8_t *buffer, size_t size)
 	return (bytes);
 }
 
+// Verifie l'en-tete IP puis extrait la partie ICMP du paquet recu.
 int	parse_packet(t_ping *ping, uint8_t *buf, ssize_t len)
 {
 	struct iphdr	*ip_hdr;
@@ -66,6 +69,7 @@ int	parse_packet(t_ping *ping, uint8_t *buf, ssize_t len)
 	return (parse_icmp(ping, buf + ip_len, len - ip_len, ntohs(icmp_hdr->un.echo.sequence)));	
 }
 
+// Valide le type, l'identifiant et la sequence avant de traiter la reponse.
 int	parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq)
 {
 	t_icmp_packet *icmp_packet;
@@ -86,6 +90,7 @@ int	parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq)
 	return (handle_echo_reply(ping, packet, len, seq));
 }
 
+// Met a jour les statistiques de latence et affiche la reponse echo.
 int	handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq)
 {
 	t_icmp_packet	*icmp_packet;
