@@ -41,6 +41,20 @@ make
 
 <img width="1593" height="2026" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/5a28b95e-0b7d-49b3-ac95-baf23c7beb12" />
 
+# 🧪 Scripts de test
+
+Les scripts sont dans le dossier `script/` et doivent etre lances depuis la racine du projet.
+
+```bash
+./script/valgrind_parser.sh 127.0.0.1
+./script/compare_ping_timestamp.sh 127.0.0.1
+./script/performance.sh 127.0.0.1
+```
+
+- `valgrind_parser.sh` lance `ft_ping` sous Valgrind en ne gardant que les fuites definitives et indirectes.
+- `compare_ping_timestamp.sh` compare les RTT de `ft_ping` avec `ping` systeme et echoue si l'ecart depasse 30 ms par paquet.
+- `performance.sh` mesure le temps total et le temps moyen par paquet.
+
 # 📁 Arborescence du projet
 ```
 ├── inc
