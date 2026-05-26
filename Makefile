@@ -26,14 +26,50 @@ SRCS		= $(SRCS_DIR)/main.c \
 
 OBJS		= $(SRCS:.c=.o)
 
-all: $(NAME)
+all: banner $(NAME)
+
+banner:
+	@echo "╔═════════════════════════════════════════════════════════════════════╗"
+	@echo "║                                                                     ║"
+	@echo "║           ███████╗████████╗    ██████╗ ██╗███╗   ██╗ ██████╗        ║"
+	@echo "║           ██╔════╝╚══██╔══╝    ██╔══██╗██║████╗  ██║██╔════╝        ║"
+	@echo "║           █████╗     ██║       ██████╔╝██║██╔██╗ ██║██║  ███╗       ║"
+	@echo "║           ██╔══╝     ██║       ██╔═══╝ ██║██║╚██╗██║██║   ██║       ║"
+	@echo "║           ██║        ██║       ██║     ██║██║ ╚████║╚██████╔╝       ║"
+	@echo "║           ╚═╝        ╚═╝       ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═════╝        ║"
+	@echo "║                                                                     ║"
+	@echo "║                    ICMP Network Diagnostic Tool                     ║"
+	@echo "║                                                                     ║"
+	@echo "╚═════════════════════════════════════════════════════════════════════╝"
+	@echo ""
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lm
-	@echo "✅ ft_ping compiled successfully!"
+	@echo ""
+	@echo "✅ Binary compiled: ./$(NAME)"
+	@echo "   Usage: sudo ./$(NAME) [options] <destination>"
+	@echo ""
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+test: $(NAME)
+	@echo "╔═══════════════════════════════════════════════════════════════╗"
+	@echo "║                   Running Test Suite                          ║"
+	@echo "╚═══════════════════════════════════════════════════════════════╝"
+	@echo ""
+	@echo "📋 Parsing & Flags validation..."
+	@./script/test_flags.sh
+	@echo ""
+	@echo "🔍 Valgrind memory leak detection..."
+	@./script/test_flags_valgrind.sh 127.0.0.1
+	@echo ""
+	@echo "⚡ Performance benchmark..."
+	@./script/performance.sh 127.0.0.1
+	@echo ""
+	@echo "╔═══════════════════════════════════════════════════════════════╗"
+	@echo "║                    ✅ All tests passed!                       ║"
+	@echo "╚═══════════════════════════════════════════════════════════════╝"
 
 clean:
 	rm -f $(OBJS)
@@ -45,4 +81,18 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+help:
+	@echo ""
+	@echo "╔═══════════════════════════════════════════════════════════════╗"
+	@echo "║                   Available Targets                           ║"
+	@echo "╚═══════════════════════════════════════════════════════════════╝"
+	@echo ""
+	@echo "  make              → Compile ft_ping"
+	@echo "  make clean        → Remove object files"
+	@echo "  make fclean       → Remove everything (objects + binary)"
+	@echo "  make re           → Clean and rebuild"
+	@echo "  make test         → Run all tests (parsing, valgrind, perf)"
+	@echo "  make help         → Show this help message"
+	@echo ""
+
+.PHONY: all clean fclean re test help banner

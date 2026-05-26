@@ -46,14 +46,21 @@ make
 Les scripts sont dans le dossier `script/` et doivent etre lances depuis la racine du projet.
 
 ```bash
-./script/valgrind_parser.sh 127.0.0.1
-./script/compare_ping_timestamp.sh 127.0.0.1
-./script/performance.sh 127.0.0.1
+./script/test_flags.sh                    # Test parsing et validation des flags
+./script/test_flags_valgrind.sh [target]  # Test flags sous Valgrind
+./script/valgrind_parser.sh [target]      # Valgrind simple avec flags custom
+./script/compare_ping_timestamp.sh [target]
+./script/performance.sh [target]
 ```
 
-- `valgrind_parser.sh` lance `ft_ping` sous Valgrind en ne gardant que les fuites definitives et indirectes.
-- `compare_ping_timestamp.sh` compare les RTT de `ft_ping` avec `ping` systeme et echoue si l'ecart depasse 30 ms par paquet.
-- `performance.sh` mesure le temps total et le temps moyen par paquet.
+**Scripts de test du parsing :**
+- `test_flags.sh` — teste tous les flags (-v, -n, -c, -i, -W, -t) avec des cas d'erreur
+- `test_flags_valgrind.sh` — lance Valgrind sur chaque flag individuellement pour vérifier les fuites mémoire en parsing
+
+**Scripts fonctionnels :**
+- `valgrind_parser.sh [target]` — lance `ft_ping` sous Valgrind, flags personnalisables via `FLAGS="-v -n"` 
+- `compare_ping_timestamp.sh [target]` — compare les RTT avec le `ping` système, seuil 30 ms par défaut
+- `performance.sh [target]` — mesure le temps total et par paquet
 
 # 📁 Arborescence du projet
 ```

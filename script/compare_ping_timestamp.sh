@@ -33,8 +33,10 @@ if [[ ${#sys_times[@]} -lt $min_count ]]; then
 	min_count=${#sys_times[@]}
 fi
 
+echo "Comparing ft_ping and system ping RTT values..."
+echo "_______________________________________"
 echo "Seq | ft_ping(ms) | ping(ms) | diff(ms)"
-echo "---- | ----------: | --------: | -------:"
+echo "----| ----------: | --------:| -------:"
 
 for ((i = 0; i < min_count; i++)); do
 	ft="${ft_times[$i]}"
