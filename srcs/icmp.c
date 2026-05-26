@@ -66,7 +66,7 @@ int	parse_packet(t_ping *ping, uint8_t *buf, ssize_t len)
 	if (len < (ssize_t)(ip_len + sizeof(struct icmphdr)))
 		return (-1);
 	icmp_hdr = (struct icmphdr *)(buf + ip_len);
-	return (parse_icmp(ping, buf + ip_len, len - ip_len, ntohs(icmp_hdr->un.echo.sequence)));	
+	return (parse_icmp(ping, buf + ip_len, len - ip_len, ntohs(icmp_hdr->un.echo.sequence), ip_hdr->ttl));
 }
 
 // Valide le type, l'identifiant et la sequence avant de traiter la reponse.
