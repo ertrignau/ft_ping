@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 12:49:27 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/01/26 12:30:17 by eric             ###   ########.fr       */
+/*   Updated: 2026/05/26 15:45:08 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,42 @@ void	print_stat(t_ping *ping)
 		printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n", 
 			ping->rtt_min, rtt_avg, ping->rtt_max, rtt_mdev);
 	}
+}
+
+int	is_valid_integer(const char *str)
+{
+	int	i;
+
+	if (!str || str[0] == '\0')
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (!isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	is_valid_float(const char *str)
+{
+	int	i;
+	int	dot_count;
+
+	if (!str || str[0] == '\0')
+		return (0);
+	i = 0;
+	dot_count = 0;
+	while (str[i])
+	{
+		if (str[i] == '.')
+			dot_count++;
+		else if (!isdigit(str[i]))
+			return (0);
+		if (dot_count > 1)
+			return (0);
+		i++;
+	}
+	return (1);
 }

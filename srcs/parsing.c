@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 17:10:01 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/01/27 10:09:45 by eric             ###   ########.fr       */
+/*   Updated: 2026/05/26 15:54:41 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ int	parse_arguments(int ac, char *av[], t_ping *ping)
 	i = 1;
 	while (i < ac)
 	{
+		if (av[i][0] != '-')
+		{
+			host = av[i];
+			i++;
+			continue;
+		}
 		if (strcmp(av[i], "-v") == 0)
 			ping->verbose = 1;
 		else if (strcmp(av[i], "-n") == 0)
@@ -42,72 +48,30 @@ int	parse_arguments(int ac, char *av[], t_ping *ping)
 		}
 		else if (strcmp(av[i], "-c") == 0)
 		{
-			if (i + 1 >= ac)
-			{
-				fprintf(stderr, "ft_ping: option requires an argument -- 'c'\n");
+			if (handle_count(ping, av, &i, ac) < 0)
 				return (-1);
-			}
-			ping->count = atoi(av[i + 1]);
-			if (ping->count <= 0)
-			{
-				fprintf(stderr, "ft_ping: bad number of packets to transmit.\n");
-				return (-1);
-			}
-			i++;
 		}
 		else if (strcmp(av[i], "-i") == 0)
 		{
-			if (i + 1 >= ac)
-			{
-				fprintf(stderr, "ft_ping: option requires an argument -- 'i'\n");
+			if (handle_interval(ping, av, &i, ac) < 0)
 				return (-1);
-			}
-			ping->interval = atof(av[i + 1]);
-			if (ping->interval < 0.2)
-			{
-				fprintf(stderr, "ft_ping: bad timing interval.\n");
-				return (-1);
-			}
-			i++;
 		}
 		else if (strcmp(av[i], "-W") == 0)
 		{
-			if (i + 1 >= ac)
-			{
-				fprintf(stderr, "ft_ping: option requires an argument -- 'W'\n");
+			if (handle_timeout(ping, av, &i, ac) < 0)
 				return (-1);
-			}
-			ping->timeout = atoi(av[i + 1]);
-			if (ping->timeout <= 0)
-			{
-				fprintf(stderr, "ft_ping: bad wait time\n");
-				return (-1);
-			}
-			i++;
 		}
-		else if (strcmp(av[i], "--ttl") == 0 || strcmp(av[i], "-t") == 0)
+		else if (strcmp(av[i], "-t") == 0 || strcmp(av[i], "--ttl") == 0)
 		{
-			if (i + 1 >= ac)
-			{
-				fprintf(stderr, "ft_ping: option requires an argument -- 'ttl'\n");
+			if (handle_ttl(ping, av, &i, ac) < 0)
 				return (-1);
-			}
-			ping->ttl = atoi(av[i + 1]);
-			if (ping->ttl < 1 || ping->ttl > 255)
-			{
-				fprintf(stderr, "ft_ping: ttl %d out of range\n", ping->ttl);
-				return (-1);
-			}
-			i++;
 		}
-		else if (av[i][0] == '-')
+		else
 		{
 			fprintf(stderr, "ft_ping: invalid option -- '%s'\n", av[i]);
 			print_usage(av[0]);
 			return (-1);
 		}
-		else
-			host = av[i];
 		i++;
 	}
 	if (!host)

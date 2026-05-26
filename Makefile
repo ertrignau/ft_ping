@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eric <eric@student.42.fr>                  +#+  +:+       +#+         #
+#    By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/21 00:00:00 by ertrigna          #+#    #+#              #
-#    Updated: 2026/01/26 12:32:04 by eric             ###   ########.fr        #
+#    Updated: 2026/05/26 16:03:17 by ertrigna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,41 +17,52 @@ CFLAGS		= -Wall -Wextra -Werror -g
 INCLUDES	= -I inc
 
 SRCS_DIR	= srcs
+OBJ_DIR		= obj
 SRCS		= $(SRCS_DIR)/main.c \
 			  $(SRCS_DIR)/init.c \
 			  $(SRCS_DIR)/parsing.c \
+			  $(SRCS_DIR)/flags.c \
 			  $(SRCS_DIR)/ping.c \
 			  $(SRCS_DIR)/utils.c \
 			  $(SRCS_DIR)/icmp.c
 
-OBJS		= $(SRCS:.c=.o)
+OBJS		= $(addprefix $(OBJ_DIR)/,$(notdir $(SRCS:.c=.o)))
 
 all: banner $(NAME)
 
 banner:
-	@echo "╔═════════════════════════════════════════════════════════════════════╗"
-	@echo "║                                                                     ║"
-	@echo "║           ███████╗████████╗    ██████╗ ██╗███╗   ██╗ ██████╗        ║"
-	@echo "║           ██╔════╝╚══██╔══╝    ██╔══██╗██║████╗  ██║██╔════╝        ║"
-	@echo "║           █████╗     ██║       ██████╔╝██║██╔██╗ ██║██║  ███╗       ║"
-	@echo "║           ██╔══╝     ██║       ██╔═══╝ ██║██║╚██╗██║██║   ██║       ║"
-	@echo "║           ██║        ██║       ██║     ██║██║ ╚████║╚██████╔╝       ║"
-	@echo "║           ╚═╝        ╚═╝       ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═════╝        ║"
-	@echo "║                                                                     ║"
-	@echo "║                    ICMP Network Diagnostic Tool                     ║"
-	@echo "║                                                                     ║"
-	@echo "╚═════════════════════════════════════════════════════════════════════╝"
+	@echo -e "\033[32m╔═════════════════════════════════════════════════════════════════════╗\033[0m"
+	@echo -e "\033[32m║                                                                     ║\033[0m"
+	@echo -e "\033[32m║           ███████╗████████╗    ██████╗ ██╗███╗   ██╗ ██████╗        ║\033[0m"
+	@echo -e "\033[32m║           ██╔════╝╚══██╔══╝    ██╔══██╗██║████╗  ██║██╔════╝        ║\033[0m"
+	@echo -e "\033[32m║           █████╗     ██║       ██████╔╝██║██╔██╗ ██║██║  ███╗       ║\033[0m"
+	@echo -e "\033[32m║           ██╔══╝     ██║       ██╔═══╝ ██║██║╚██╗██║██║   ██║       ║\033[0m"
+	@echo -e "\033[32m║           ██║        ██║       ██║     ██║██║ ╚████║╚██████╔╝       ║\033[0m"
+	@echo -e "\033[32m║           ╚═╝        ╚═╝       ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═════╝        ║\033[0m"
+	@echo -e "\033[32m║                                                                     ║\033[0m"
+	@echo -e "\033[32m║                    ICMP Network Diagnostic Tool                     ║\033[0m"
+	@echo -e "\033[32m║                                                                     ║\033[0m"
+	@echo -e "\033[32m╚═════════════════════════════════════════════════════════════════════╝\033[0m"
 	@echo ""
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lm
+$(NAME): $(OBJ_DIR) $(OBJS)
+	@printf "\n"
+	@printf "  ⏳ Linking binary... "
+	@for i in $$(seq 1 30); do printf "█"; sleep 0.01; done
+	@printf "\n"
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lm
 	@echo ""
 	@echo "✅ Binary compiled: ./$(NAME)"
 	@echo "   Usage: sudo ./$(NAME) [options] <destination>"
 	@echo ""
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+
+$(OBJ_DIR)/%.o: $(SRCS_DIR)/%.c
+	@printf "  %-60s\r" "🔨 Compiling $*..."
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ 2>&1 | sed 's/^/    /' || (echo ""; exit 1)
+	@printf "  %-60s\r" "✓ Compiled $*"
 
 test: $(NAME)
 	@echo "╔═══════════════════════════════════════════════════════════════╗"
@@ -72,11 +83,11 @@ test: $(NAME)
 	@echo "╚═══════════════════════════════════════════════════════════════╝"
 
 clean:
-	rm -f $(OBJS)
+	@rm -rf $(OBJ_DIR)
 	@echo "🧹 Object files cleaned"
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 	@echo "🧹 Binary cleaned"
 
 re: fclean all
