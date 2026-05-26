@@ -68,6 +68,12 @@ Les scripts sont dans le dossier `script/` et doivent etre lances depuis la raci
 │   ├── icmp.h     # Définition des structures ICMP et fonctions associées
 │   ├── ping.h     # Structure principale t_ping et prototypes globaux
 │   └── utils.h    # Fonctions utilitaires
+├── script
+|   ├── compare_ping_timestamp.sh 
+|   ├── performance.sh
+│   ├── test_flags.sh
+│   ├── valgrind_parser.sh
+|   └── test_flags_valgrind.sh
 ├── srcs
 │   ├── icmp.c     # Construction et traitement des paquets ICMP
 │   ├── init.c     # Initialisation du programme et du socket
