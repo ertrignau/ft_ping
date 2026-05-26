@@ -51,7 +51,6 @@ void resolve_hosts(t_ping *ping, char *host)
 	ping->dest_addr = *(struct sockaddr_in *)res->ai_addr;
 	ping->addrlen = sizeof(ping->dest_addr);
 	freeaddrinfo(res);
-	free(hints);
 }
 
 // Construit et envoie une requete ICMP Echo vers la cible resolue.
