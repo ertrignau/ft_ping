@@ -38,11 +38,22 @@ int main(int ac, char *av[])
 	while (!g_signal && (ping.count == 0 || ping.transmitted < ping.count))
 	{
 		send_ping(&ping);
-		bytes = recv_packet(&ping, buffer, sizeof(buffer));
-		if (bytes > 0)
-			parse_packet(&ping, buffer, bytes);
-		else if (bytes == 0)
-			printf("Request timeout for icmp_seq %d\n", ping.seq);
+		while (1)
+		{
+			bytes = recv_packet(&ping, buffer, sizeof(buffer));
+			if (bytes > 0)
+			{
+				if (parse_packet(&ping, buffer, bytes) == 0)
+					break;
+			}
+			else if (bytes == 0)
+			{
+				printf("Request timeout for icmp_seq %d\n", ping.seq);
+				break;
+			}
+			else
+				break;
+		}
 		usleep((unsigned int)(ping.interval * 1000000));
 	}
 	if (g_signal || ping.transmitted > 0)
