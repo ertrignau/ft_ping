@@ -70,7 +70,7 @@ int	parse_packet(t_ping *ping, uint8_t *buf, ssize_t len)
 }
 
 // Valide le type, l'identifiant et la sequence avant de traiter la reponse.
-int	parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq)
+int	parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int ttl)
 {
 	t_icmp_packet *icmp_packet;
 
@@ -87,11 +87,11 @@ int	parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq)
 		return (-1);
 	if (ntohs(icmp_packet->header.un.echo.sequence) != seq)
 		return (-1);
-	return (handle_echo_reply(ping, packet, len, seq));
+	return (handle_echo_reply(ping, packet, len, seq, ttl));
 }
 
 // Met a jour les statistiques de latence et affiche la reponse echo.
-int	handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq)
+int	handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int ttl)
 {
 	t_icmp_packet	*icmp_packet;
 	struct timeval	sentime;
@@ -112,12 +112,12 @@ int	handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq)
 	ping->rtt_sum += rtt_ms;
 	ping->rtt_sum_sq += rtt_ms * rtt_ms;
 	if (ping->verbose)
-		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms (type=%d, code=%d, id=%d)\n", 
-			len, inet_ntoa(ping->dest_addr.sin_addr), seq, 
-			((struct iphdr *)((uint8_t *)packet - sizeof(struct iphdr)))->ttl,
-			rtt_ms, icmp_packet->header.type, icmp_packet->header.code, 
+		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms (type=%d, code=%d, id=%d)\n",
+			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl,
+			rtt_ms, icmp_packet->header.type, icmp_packet->header.code,
 			ntohs(icmp_packet->header.un.echo.id));
 	else
-		printf("%ld bytes from %s: icmp_seq=%d time=%.3f ms\n", len, inet_ntoa(ping->dest_addr.sin_addr), seq, rtt_ms);
+		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
+			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl, rtt_ms);
 	return (0);
 }

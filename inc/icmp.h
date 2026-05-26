@@ -29,7 +29,7 @@ void		init_tcmp_packet(t_icmp_packet *packet, int seq);
 uint16_t	icmp_checksum(void *data, int len);
 ssize_t 	recv_packet(t_ping *ping, uint8_t *buffer, size_t size);
 int			parse_packet(t_ping *ping, uint8_t *buf, ssize_t len);
-int			parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq);
-int			handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq);
+int			parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int ttl);
+int			handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int ttl);
 
 #endif
