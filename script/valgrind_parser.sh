@@ -21,7 +21,6 @@ sudo valgrind \
 	--show-leak-kinds=definite,indirect \
 	--errors-for-leak-kinds=definite,indirect \
 	--track-origins=yes \
-	--suppressions=/usr/share/valgrind/default.supp \
 	"$BIN" $FLAGS -c "$COUNT" "$TARGET"
 
 echo ""

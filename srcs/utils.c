@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 12:49:27 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/26 15:45:08 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/27 18:48:33 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,16 @@ int	is_valid_float(const char *str)
 			return (0);
 		i++;
 	}
+	return (1);
+}
+
+int	is_hostname_like(const char *str)
+{
+	if (!str || str[0] == '\0')
+		return (0);
+	if (is_valid_integer(str) || is_valid_float(str))
+		return (0);
+	if (str[0] == '-')
+		return (0);
 	return (1);
 }

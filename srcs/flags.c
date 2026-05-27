@@ -16,7 +16,7 @@
 // Flag handlers
 int	handle_count(t_ping *ping, char **av, int *i, int ac)
 {
-	if (*i + 1 >= ac)
+	if (*i + 1 >= ac || is_hostname_like(av[*i + 1]))
 		return (fprintf(stderr, "ft_ping: option requires an argument -- 'c'\n"), -1);
 	if (!is_valid_integer(av[*i + 1]))
 		return (fprintf(stderr, "ft_ping: invalid count '%s' - must be numeric only\n", av[*i + 1]), -1);
@@ -29,7 +29,7 @@ int	handle_count(t_ping *ping, char **av, int *i, int ac)
 
 int	handle_interval(t_ping *ping, char **av, int *i, int ac)
 {
-	if (*i + 1 >= ac)
+	if (*i + 1 >= ac || is_hostname_like(av[*i + 1]))
 		return (fprintf(stderr, "ft_ping: option requires an argument -- 'i'\n"), -1);
 	if (!is_valid_float(av[*i + 1]))
 		return (fprintf(stderr, "ft_ping: invalid interval '%s' - must be numeric only\n", av[*i + 1]), -1);
@@ -55,7 +55,7 @@ int	handle_timeout(t_ping *ping, char **av, int *i, int ac)
 
 int	handle_ttl(t_ping *ping, char **av, int *i, int ac)
 {
-	if (*i + 1 >= ac)
+	if (*i + 1 >= ac || is_hostname_like(av[*i + 1]))
 		return (fprintf(stderr, "ft_ping: option requires an argument -- 'ttl'\n"), -1);
 	if (!is_valid_integer(av[*i + 1]))
 		return (fprintf(stderr, "ft_ping: invalid ttl '%s' - must be numeric only\n", av[*i + 1]), -1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 11:42:29 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/26 15:54:42 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/27 18:48:39 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int		handle_timeout(t_ping *ping, char **av, int *i, int ac);
 int		handle_ttl(t_ping *ping, char **av, int *i, int ac);
 int		is_valid_integer(const char *str);
 int		is_valid_float(const char *str);
+int		is_hostname_like(const char *str);
 void	print_stat(t_ping *ping);
 
 #endif

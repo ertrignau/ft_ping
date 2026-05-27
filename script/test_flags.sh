@@ -16,21 +16,22 @@ test_flag() {
 	local args="$2"
 	local expect_fail="${3:-0}"
 	
-	if sudo "$BIN" $args >/dev/null 2>&1; then
+	printf "  [%-40s] Testing: %s\r" "$name" "$args"
+	if timeout 3 sudo "$BIN" $args >/dev/null 2>&1; then
 		if [[ $expect_fail -eq 0 ]]; then
-			echo "✓ $name"
-			((PASS++))
+			printf "  [%-40s] ✓\n" "$name"
+			PASS=$((PASS + 1))
 		else
-			echo "✗ $name (expected to fail but passed)"
-			((FAIL++))
+			printf "  [%-40s] ✗ (expected to fail but passed)\n" "$name"
+			FAIL=$((FAIL + 1))
 		fi
 	else
 		if [[ $expect_fail -eq 1 ]]; then
-			echo "✓ $name (correctly failed)"
-			((PASS++))
+			printf "  [%-40s] ✓ (correctly failed)\n" "$name"
+			PASS=$((PASS + 1))
 		else
-			echo "✗ $name (unexpected failure)"
-			((FAIL++))
+			printf "  [%-40s] ✗ (unexpected failure)\n" "$name"
+			FAIL=$((FAIL + 1))
 		fi
 	fi
 }
@@ -40,15 +41,16 @@ test_flag_output() {
 	local args="$2"
 	local expect_output="$3"
 	
-	output=$(sudo "$BIN" $args 2>&1 || true)
+	printf "  [%-40s] Testing: %s\r" "$name" "$args"
+	output=$(timeout 3 sudo "$BIN" $args 2>&1 || true)
 	if echo "$output" | grep -q "$expect_output"; then
-		echo "✓ $name (output matched)"
-		((PASS++))
+		printf "  [%-40s] ✓\n" "$name"
+		PASS=$((PASS + 1))
 	else
-		echo "✗ $name (output mismatch)"
-		echo "  Expected: $expect_output"
-		echo "  Got: $output" | head -3
-		((FAIL++))
+		printf "  [%-40s] ✗ (output mismatch)\n" "$name"
+		echo "    Expected: $expect_output"
+		echo "    Got: $(echo "$output" | head -1)"
+		FAIL=$((FAIL + 1))
 	fi
 }
 
@@ -60,9 +62,9 @@ echo "[Basic Flags]"
 test_flag "verbose flag (-v)" "-v -c 1 127.0.0.1"
 test_flag "numeric flag (-n)" "-n -c 1 127.0.0.1"
 test_flag "count flag (-c 2)" "-c 2 127.0.0.1"
-test_flag "interval flag (-i 0.5)" "-i 0.5 127.0.0.1"
-test_flag "timeout flag (-W 2)" "-W 2 127.0.0.1"
-test_flag "ttl flag (-t 128)" "-t 128 127.0.0.1"
+test_flag "interval flag (-i 0.5)" "-i 0.5 -c 1 127.0.0.1"
+test_flag "timeout flag (-W 2)" "-W 2 -c 1 127.0.0.1"
+test_flag "ttl flag (-t 128)" "-t 128 -c 1 127.0.0.1"
 test_flag "combined flags (-v -c 1 -i 0.5)" "-v -c 1 -i 0.5 127.0.0.1"
 
 echo ""
