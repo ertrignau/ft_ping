@@ -29,7 +29,7 @@ void	init_ping(t_ping *ping)
 	ping->interval = 1.0;						// interval a 1 de base
 	ping->timeout = 1;							// timeout defini a 1sec de base
 	ping->hostname = " ";						// pour le flag -v
-	ping->ttl = 64;
+	ping->size = 56;
 	ping->numeric = 0;
 	ping->rtt_min = 999999.0;
 	ping->rtt_max = 0.0;

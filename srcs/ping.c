@@ -6,7 +6,7 @@
 /*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 13:28:31 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 15:48:35 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/28 16:37:50 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,6 @@ void create_socket(t_ping *ping)
 		exit (EXIT_FAILURE);
 	}
 	set_socket_timeout(ping->sockfd, ping->timeout);
-	if (setsockopt(ping->sockfd, IPPROTO_IP, IP_TTL, &ping->ttl, sizeof(ping->ttl)) < 0)
-	{
-		perror("setsockopt(IP_TTL) failed");
-		exit (EXIT_FAILURE);
-	}
 }
 
 // Resout le nom d'hote cible et remplit l'adresse de destination.

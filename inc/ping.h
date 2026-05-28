@@ -47,7 +47,7 @@ typedef struct s_ping
 	int					count;
 	double				interval;
 	int					timeout;
-	int					ttl;
+	int					size;
 	int					numeric;
 	char				*hostname;
 

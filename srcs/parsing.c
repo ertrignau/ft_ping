@@ -6,7 +6,7 @@
 /*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 17:10:01 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 15:41:41 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/28 16:37:45 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,15 @@ int	parse_arguments(int ac, char *av[], t_ping *ping)
 			if (handle_interval(ping, av, &i, ac) < 0)
 				return (-1);
 		}
+		// For timeout testing ip : 203.0.113.1
 		else if (strcmp(av[i], "-W") == 0)
 		{
 			if (handle_timeout(ping, av, &i, ac) < 0)
 				return (-1);
 		}
-		else if (strcmp(av[i], "-t") == 0 || strcmp(av[i], "--ttl") == 0)
+		else if (strcmp(av[i], "-s") == 0)
 		{
-			if (handle_ttl(ping, av, &i, ac) < 0)
+			if (handle_size(ping, av, &i, ac) < 0)
 				return (-1);
 		}
 		else
