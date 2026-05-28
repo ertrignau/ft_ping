@@ -6,7 +6,7 @@
 /*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 11:57:09 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 16:03:09 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/28 16:40:17 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@ void	init_ping(t_ping *ping)
 	ping->received = 0; 						// paquets recu
 	ping->addrlen = sizeof(ping->dest_addr);	// taille de l'addresse
 	ping->verbose = 0;
+	ping->debug = 0;
 	ping->count = 0;							// 0 = infini
 	ping->interval = 1.0;						// interval a 1 de base
 	ping->timeout = 1;							// timeout defini a 1sec de base
 	ping->hostname = " ";						// pour le flag -v
-	ping->size = 56;
+	ping->ttl = 64;
 	ping->numeric = 0;
 	ping->rtt_min = 999999.0;
 	ping->rtt_max = 0.0;

@@ -6,7 +6,7 @@
 /*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 11:40:24 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 15:42:02 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/28 16:41:48 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ typedef struct s_ping
 	int					transmitted;
 	int					received;
 	int					verbose;
+	int					debug;
 	int					count;
 	double				interval;
 	int					timeout;
-	int					size;
+	int					ttl;
 	int					numeric;
 	char				*hostname;
 

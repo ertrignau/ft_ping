@@ -6,7 +6,7 @@
 /*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 17:17:56 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 15:48:08 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/28 16:42:11 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,18 @@ int	handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int t
 		ping->rtt_max = rtt_ms;
 	ping->rtt_sum += rtt_ms;
 	ping->rtt_sum_sq += rtt_ms * rtt_ms;
-	if (ping->verbose)
+	if (ping->debug)
+	{
+		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
+			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl, rtt_ms);
+		printf("  ICMP Echo Reply Details:\n");
+		printf("    Type: %d (ICMP_ECHOREPLY)\n", icmp_packet->header.type);
+		printf("    Code: %d\n", icmp_packet->header.code);
+		printf("    Checksum: 0x%04x\n", ntohs(icmp_packet->header.checksum));
+		printf("    ID: %d\n", ntohs(icmp_packet->header.un.echo.id));
+		printf("    Sequence: %d\n", ntohs(icmp_packet->header.un.echo.sequence));
+	}
+	else if (ping->verbose)
 		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms (type=%d, code=%d, id=%d)\n",
 			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl,
 			rtt_ms, icmp_packet->header.type, icmp_packet->header.code,
