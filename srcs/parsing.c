@@ -6,16 +6,11 @@
 /*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 17:10:01 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/26 15:54:41 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/28 15:41:41 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ping.h"
-
-void	print_usage(char *progname)
-{
-	fprintf(stderr, "Usage: %s [-v] [-?] [-n] [-c count] [-i interval] [-W timeout] [-t ttl] <destination>\n", progname);
-}
 
 int	parse_arguments(int ac, char *av[], t_ping *ping)
 {

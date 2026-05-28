@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ping.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 13:28:31 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/01/27 10:15:03 by eric             ###   ########.fr       */
+/*   Updated: 2026/05/28 15:48:35 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void resolve_hosts(t_ping *ping, char *host)
 	freeaddrinfo(res);
 }
 
-// Construit et envoie une requete ICMP Echo vers la cible resolue.
+// Construit et envoie une requete ICMP Echo Request vers la cible resolue.
+// Incremente le compteur de paquets transmis et affiche les details si le mode verbose est actif.
 void send_ping(t_ping *ping)
 {
 	t_icmp_packet	packet;

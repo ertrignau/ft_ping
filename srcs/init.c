@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 11:57:09 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/01/27 10:06:25 by eric             ###   ########.fr       */
+/*   Updated: 2026/05/28 16:03:09 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ void	init_ping(t_ping *ping)
 	ping->rtt_sum_sq = 0.0;
 }
 
+// Initialise un paquet ICMP Echo Request avec les champs appropries (type, code, id, sequence, timestamp) et calcule le checksum.
+// @packet: pointeur vers la structure de paquet ICMP a remplir
+// @seq: numero de sequence a inclure dans le paquet
+// Remplit les champs de l'en-tete ICMP, ajoute un timestamp dans la charge utile, et calcule le checksum pour assurer l'integrite du paquet.
+// Utilise gettimeofday() pour obtenir le temps d'envoi et le stocke dans la charge utile du paquet. Le checksum est calcule sur l'ensemble du paquet ICMP.
+// icmp_checksum() est appele pour calculer le checksum et le champ checksum de l'en-tete est mis a jour en consequence. Le paquet est pret a etre envoye apres cette initialisation.
 void	init_tcmp_packet(t_icmp_packet *packet, int seq)
 {
 	struct timeval tv;

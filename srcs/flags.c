@@ -11,9 +11,14 @@
 /* ************************************************************************** */
 
 #include "ping.h"
-#include <ctype.h>
 
 // Flag handlers
+
+void	print_usage(char *progname)
+{
+	fprintf(stderr, "Usage: %s [-v] [-?] [-n] [-c count] [-i interval] [-W timeout] [-t ttl] <destination>\n", progname);
+}
+
 int	handle_count(t_ping *ping, char **av, int *i, int ac)
 {
 	if (*i + 1 >= ac || is_hostname_like(av[*i + 1]))

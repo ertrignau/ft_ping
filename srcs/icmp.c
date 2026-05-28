@@ -3,16 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   icmp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 17:17:56 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/01/26 12:28:52 by eric             ###   ########.fr       */
+/*   Updated: 2026/05/28 15:48:08 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ping.h"
 
 // Calcule le checksum ICMP pour un bloc de donnees brut.
+// Permet de verifier l'integrite des paquets ICMP envoyes et recus. Retourne le checksum
+// de 16 bits a inclure dans l'en-tete ICMP.
+
 uint16_t icmp_checksum(void *data, int len)
 {
 	uint16_t	*buf;
@@ -35,6 +38,11 @@ uint16_t icmp_checksum(void *data, int len)
 }
 
 // Recoit un paquet sur la socket non bloquante et gere les erreurs temporaires.
+// @ping: contexte de l'execution (socket, stats, etc.)
+// @buffer: tampon pour stocker les donnees recues
+// @size: taille du tampon en octets
+// Retourne le nombre d'octets recus, 0 si aucun paquet disponible, ou -1 en cas d'erreur (autre que EAGAIN/EWOULDBLOCK).
+
 ssize_t recv_packet(t_ping *ping, uint8_t *buffer, size_t size)
 {
 	struct sockaddr_in	addr;
@@ -53,6 +61,11 @@ ssize_t recv_packet(t_ping *ping, uint8_t *buffer, size_t size)
 }
 
 // Verifie l'en-tete IP puis extrait la partie ICMP du paquet recu.
+// @ping: contexte de l'execution (stats, flags, etc.)
+// @buf: tampon contenant les donnees recues (debut de l'en-tete IP)
+// @len: taille totale des donnees recues (octets)
+// Retourne 0 si le paquet a ete traite avec succes, ou -1 en cas d'erreur (paquet trop court, type ICMP non ECHO REPLY, id/seq mismatch).
+
 int	parse_packet(t_ping *ping, uint8_t *buf, ssize_t len)
 {
 	struct iphdr	*ip_hdr;
@@ -69,7 +82,16 @@ int	parse_packet(t_ping *ping, uint8_t *buf, ssize_t len)
 	return (parse_icmp(ping, buf + ip_len, len - ip_len, ntohs(icmp_hdr->un.echo.sequence), ip_hdr->ttl));
 }
 
-// Valide le type, l'identifiant et la sequence avant de traiter la reponse.
+// parse_icmp — valider et traiter une réponse ICMP ECHO
+// @ping: contexte de l'exécution (stats, flags, etc.)
+// @packet: pointeur sur le bloc ICMP (début de l'en-tête ICMP)
+// @len: taille du bloc ICMP (octets)
+// @seq: numéro de séquence attendu (ordre hôte)
+// @ttl: TTL extrait de l'en-tête IP recevante
+// Vérifie la longueur, le type (ICMP_ECHOREPLY), l'id (doit matcher getpid())
+ //et la séquence. Si tout est OK, appelle handle_echo_reply() qui met à jour
+// les statistiques et affiche la réponse. Retourne 0 si traité, -1 sinon.
+
 int	parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int ttl)
 {
 	t_icmp_packet *icmp_packet;
@@ -90,7 +112,14 @@ int	parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int ttl)
 	return (handle_echo_reply(ping, packet, len, seq, ttl));
 }
 
-// Met a jour les statistiques de latence et affiche la reponse echo.
+// Met a jour les statistiques de latence et affiche la reponse echo reply
+// @ping: contexte de l'exécution (stats, flags, etc.)
+// @packet: pointeur sur le bloc ICMP (début de l'en-tête
+// @len: taille du bloc ICMP (octets)
+// @seq: numéro de séquence de la requête correspondante
+// @ttl: TTL extrait de l'en-tête IP recevante
+// Calcule le RTT en ms, met à jour les stats (min, max, sum, ...)
+
 int	handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int ttl)
 {
 	t_icmp_packet	*icmp_packet;
