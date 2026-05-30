@@ -6,7 +6,7 @@
 /*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 11:00:23 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/01/26 15:48:59 by eric             ###   ########.fr       */
+/*   Updated: 2026/05/30 09:56:59 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,33 @@ int main(int ac, char *av[])
 	uint8_t	buffer[1024];
 	ssize_t	bytes;
 	
+	if (geteuid() != 0)
+	{
+		fprintf(stderr, "ft_ping: This program must be run with root privileges\n");
+		return (1);
+	}
 	signal(SIGINT, signal_handler);
 	init_ping(&ping);
 	if (parse_arguments(ac, av, &ping) < 0)
 		return (1);
 	create_socket(&ping);
-	if (ping.numeric)
-		printf("PING %s (%s): 56 data bytes\n", inet_ntoa(ping.dest_addr.sin_addr), inet_ntoa(ping.dest_addr.sin_addr));
+	resolve_hosts(&ping, ping.hostname);
+	if (ping.verbose)
+	{
+		if (ping.numeric)
+			printf("PING %s (%s): 56 data bytes, id 0x%x = %d\n", inet_ntoa(ping.dest_addr.sin_addr), inet_ntoa(ping.dest_addr.sin_addr), getpid() & 0xffff, getpid() & 0xffff);
+		else
+			printf("PING %s (%s): 56 data bytes, id 0x%x = %d\n", ping.hostname, inet_ntoa(ping.dest_addr.sin_addr), getpid() & 0xffff, getpid() & 0xffff);
+	}
 	else
-		printf("PING %s (%s): 56 data bytes\n", ping.hostname, inet_ntoa(ping.dest_addr.sin_addr));
+	{
+		if (ping.numeric)
+			printf("PING %s (%s): 56 data bytes\n", inet_ntoa(ping.dest_addr.sin_addr), inet_ntoa(ping.dest_addr.sin_addr));
+		else
+			printf("PING %s (%s): 56 data bytes\n", ping.hostname, inet_ntoa(ping.dest_addr.sin_addr));
+	}
+	
+	warmup_ping(&ping);
 	while (!g_signal && (ping.count == 0 || ping.transmitted < ping.count))
 	{
 		send_ping(&ping);
@@ -48,7 +66,6 @@ int main(int ac, char *av[])
 			}
 			else if (bytes == 0)
 			{
-				printf("Request timeout for icmp_seq %d\n", ping.seq);
 				break;
 			}
 			else

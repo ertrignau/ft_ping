@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   icmp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 17:17:56 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 16:42:11 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/30 09:51:12 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ ssize_t recv_packet(t_ping *ping, uint8_t *buffer, size_t size)
 	{
 		if (errno == EAGAIN || errno == EWOULDBLOCK)
 			return (0);
+		if (errno == EINTR)
+			return (-1);
 		perror("recvfrom() failed");
 		return (-1);
 	}
@@ -152,12 +154,24 @@ int	handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int t
 		printf("    Sequence: %d\n", ntohs(icmp_packet->header.un.echo.sequence));
 	}
 	else if (ping->verbose)
-		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms (type=%d, code=%d, id=%d)\n",
-			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl,
-			rtt_ms, icmp_packet->header.type, icmp_packet->header.code,
-			ntohs(icmp_packet->header.un.echo.id));
+	{
+		char formatted_rtt[20];
+		snprintf(formatted_rtt, sizeof(formatted_rtt), "%.3f", rtt_ms);
+		for (int i = 0; formatted_rtt[i]; i++)
+			if (formatted_rtt[i] == '.')
+				formatted_rtt[i] = ',';
+		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%s ms\n",
+			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl, formatted_rtt);
+	}
 	else
-		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
-			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl, rtt_ms);
+	{
+		char formatted_rtt[20];
+		snprintf(formatted_rtt, sizeof(formatted_rtt), "%.3f", rtt_ms);
+		for (int i = 0; formatted_rtt[i]; i++)
+			if (formatted_rtt[i] == '.')
+				formatted_rtt[i] = ',';
+		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%s ms\n",
+			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl, formatted_rtt);
+	}
 	return (0);
 }

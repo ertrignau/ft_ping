@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 17:10:01 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 16:41:47 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/30 09:51:18 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int	parse_arguments(int ac, char *av[], t_ping *ping)
 		fprintf(stderr, "ft_ping: missing host operand\n");
 		return (-1);
 	}
-	resolve_hosts(ping, host);
 	ping->hostname = host;
 	return (0);
 }

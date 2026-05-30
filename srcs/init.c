@@ -20,7 +20,7 @@ void	init_ping(t_ping *ping)
 	
 	memset(ping, 0, sizeof(t_ping));
 	
-	ping->seq = 1; 								// compteur de sequence
+	ping->seq = 0; 								// compteur de sequence
 	ping->transmitted = 0;						// paquets envoyes
 	ping->received = 0; 						// paquets recu
 	ping->addrlen = sizeof(ping->dest_addr);	// taille de l'addresse

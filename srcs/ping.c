@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ping.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 13:28:31 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 16:40:20 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/05/30 09:56:59 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void resolve_hosts(t_ping *ping, char *host)
 }
 
 // Construit et envoie une requete ICMP Echo Request vers la cible resolue.
-// Incremente le compteur de paquets transmis et affiche les details si le mode verbose est actif.
+// Incremente le compteur de paquets transmis.
 void send_ping(t_ping *ping)
 {
 	t_icmp_packet	packet;
@@ -69,8 +69,39 @@ void send_ping(t_ping *ping)
 		perror("sendto() failed\n");
 		return ;
 	}
-	if (ping->verbose)
-		printf("Sent ICMP ECHO_REQUEST, seq=%d, id=%d, size=%ld bytes\n", ping->seq, getpid(), sent);
 	ping->transmitted++;
 	ping->seq++;
+}
+
+// Envoie un paquet de warmup pour initialiser le cache ARP et le routage.
+// Ce paquet n'est pas compté dans les statistiques.
+// Envoie un paquet de warmup pour initialiser le cache ARP et le routage.
+// Ce paquet n'est pas compté dans les statistiques et n'est pas affiché.
+void warmup_ping(t_ping *ping)
+{
+	uint8_t	buffer[1024];
+	ssize_t	bytes;
+
+	if (!ping)
+		return ;
+	send_ping(ping);
+	while (1)
+	{
+		bytes = recv_packet(ping, buffer, sizeof(buffer));
+		if (bytes > 0)
+		{
+			break;
+		}
+		else if (bytes == 0)
+			break;
+		else
+			break;
+	}
+	ping->transmitted = 0;
+	ping->received = 0;
+	ping->seq = 0;
+	ping->rtt_min = 999999.0;
+	ping->rtt_max = 0.0;
+	ping->rtt_sum = 0.0;
+	ping->rtt_sum_sq = 0.0;
 }

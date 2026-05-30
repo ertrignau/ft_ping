@@ -6,7 +6,7 @@
 /*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 12:49:27 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/27 18:48:33 by eric             ###   ########.fr       */
+/*   Updated: 2026/05/30 09:53:54 by eric             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,31 @@ void	print_stat(t_ping *ping)
 	int		lost;
 	float	loss_percent;
 	double	rtt_avg;
-	double	rtt_mdev;
+	double	rtt_stddev;
+	char	min_str[20], avg_str[20], max_str[20], std_str[20];
 
-	printf("\n--- %s ping statistics ---\n", ping->hostname);
+	printf("--- %s ping statistics ---\n", ping->hostname);
 	lost = ping->transmitted - ping->received;
 	loss_percent = 0.0;
 	if (ping->transmitted > 0)
 		loss_percent = ((float)lost / (float)ping->transmitted) * 100.0;
-	printf("%d packets transmitted, %d packets received, %.1f%% packet loss\n", 
+	printf("%d packets transmitted, %d packets received, %.0f%% packet loss\n", 
 		ping->transmitted, ping->received, loss_percent);
 
 	if (ping->received > 0)
 	{
 		rtt_avg = ping->rtt_sum / ping->received;
-		rtt_mdev = sqrt((ping->rtt_sum_sq / ping->received) - (rtt_avg * rtt_avg));
-		printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n", 
-			ping->rtt_min, rtt_avg, ping->rtt_max, rtt_mdev);
+		rtt_stddev = sqrt((ping->rtt_sum_sq / ping->received) - (rtt_avg * rtt_avg));
+		snprintf(min_str, sizeof(min_str), "%.3f", ping->rtt_min);
+		snprintf(avg_str, sizeof(avg_str), "%.3f", rtt_avg);
+		snprintf(max_str, sizeof(max_str), "%.3f", ping->rtt_max);
+		snprintf(std_str, sizeof(std_str), "%.3f", rtt_stddev);
+		for (int i = 0; min_str[i]; i++) if (min_str[i] == '.') min_str[i] = ',';
+		for (int i = 0; avg_str[i]; i++) if (avg_str[i] == '.') avg_str[i] = ',';
+		for (int i = 0; max_str[i]; i++) if (max_str[i] == '.') max_str[i] = ',';
+		for (int i = 0; std_str[i]; i++) if (std_str[i] == '.') std_str[i] = ',';
+		printf("round-trip min/avg/max/stddev = %s/%s/%s/%s ms\n", 
+			min_str, avg_str, max_str, std_str);
 	}
 }
 
