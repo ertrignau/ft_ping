@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eric <eric@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 11:00:23 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/30 09:56:59 by eric             ###   ########.fr       */
+/*   Updated: 2026/06/03 15:01:40 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int main(int ac, char *av[])
 			printf("PING %s (%s): 56 data bytes\n", ping.hostname, inet_ntoa(ping.dest_addr.sin_addr));
 	}
 	
-	warmup_ping(&ping);
+	// warmup_ping(&ping);
 	while (!g_signal && (ping.count == 0 || ping.transmitted < ping.count))
 	{
 		send_ping(&ping);
