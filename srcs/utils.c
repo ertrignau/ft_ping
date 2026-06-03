@@ -52,10 +52,10 @@ void	print_stat(t_ping *ping)
 		snprintf(avg_str, sizeof(avg_str), "%.3f", rtt_avg);
 		snprintf(max_str, sizeof(max_str), "%.3f", ping->rtt_max);
 		snprintf(std_str, sizeof(std_str), "%.3f", rtt_stddev);
-		for (int i = 0; min_str[i]; i++) if (min_str[i] == '.') min_str[i] = ',';
-		for (int i = 0; avg_str[i]; i++) if (avg_str[i] == '.') avg_str[i] = ',';
-		for (int i = 0; max_str[i]; i++) if (max_str[i] == '.') max_str[i] = ',';
-		for (int i = 0; std_str[i]; i++) if (std_str[i] == '.') std_str[i] = ',';
+		for (int i = 0; min_str[i]; i++) if (min_str[i] == '.') min_str[i] = '.';
+		for (int i = 0; avg_str[i]; i++) if (avg_str[i] == '.') avg_str[i] = '.';
+		for (int i = 0; max_str[i]; i++) if (max_str[i] == '.') max_str[i] = '.';
+		for (int i = 0; std_str[i]; i++) if (std_str[i] == '.') std_str[i] = '.';
 		printf("round-trip min/avg/max/stddev = %s/%s/%s/%s ms\n", 
 			min_str, avg_str, max_str, std_str);
 	}

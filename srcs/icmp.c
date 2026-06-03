@@ -103,8 +103,6 @@ int	parse_icmp(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int ttl)
 	icmp_packet = (t_icmp_packet *)packet;
 	if (icmp_packet->header.type != ICMP_ECHOREPLY)
 	{
-		if (ping->verbose)
-			printf("Received ICMP packet type %d, code %d\n", icmp_packet->header.type, icmp_packet->header.code);
 		return (-1);
 	}
 	if (ntohs(icmp_packet->header.un.echo.id) != getpid())
@@ -153,23 +151,10 @@ int	handle_echo_reply(t_ping *ping, uint8_t *packet, ssize_t len, int seq, int t
 		printf("    ID: %d\n", ntohs(icmp_packet->header.un.echo.id));
 		printf("    Sequence: %d\n", ntohs(icmp_packet->header.un.echo.sequence));
 	}
-	else if (ping->verbose)
-	{
-		char formatted_rtt[20];
-		snprintf(formatted_rtt, sizeof(formatted_rtt), "%.3f", rtt_ms);
-		for (int i = 0; formatted_rtt[i]; i++)
-			if (formatted_rtt[i] == '.')
-				formatted_rtt[i] = ',';
-		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%s ms\n",
-			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl, formatted_rtt);
-	}
 	else
 	{
 		char formatted_rtt[20];
 		snprintf(formatted_rtt, sizeof(formatted_rtt), "%.3f", rtt_ms);
-		for (int i = 0; formatted_rtt[i]; i++)
-			if (formatted_rtt[i] == '.')
-				formatted_rtt[i] = ',';
 		printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%s ms\n",
 			len, inet_ntoa(ping->dest_addr.sin_addr), seq, ttl, formatted_rtt);
 	}
