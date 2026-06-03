@@ -45,7 +45,7 @@ void resolve_hosts(t_ping *ping, char *host)
 	
 	if (getaddrinfo(host, NULL, &hints, &res) != 0)
 	{
-		perror("getaddrinfo() failed");
+		fprintf(stderr, "ft_ping: unknown host\n");
 		exit (1);
 	}
 	ping->dest_addr = *(struct sockaddr_in *)res->ai_addr;
