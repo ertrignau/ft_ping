@@ -6,7 +6,7 @@
 /*   By: ertrigna <ertrigna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 11:57:09 by ertrigna          #+#    #+#             */
-/*   Updated: 2026/05/28 16:40:17 by ertrigna         ###   ########.fr       */
+/*   Updated: 2026/06/03 14:53:01 by ertrigna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	init_ping(t_ping *ping)
 	
 	memset(ping, 0, sizeof(t_ping));
 	
-	ping->seq = 0; 								// compteur de sequence
+	ping->seq = 1; 								// compteur de sequence
 	ping->transmitted = 0;						// paquets envoyes
 	ping->received = 0; 						// paquets recu
 	ping->addrlen = sizeof(ping->dest_addr);	// taille de l'addresse
